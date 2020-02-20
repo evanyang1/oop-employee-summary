@@ -1,52 +1,19 @@
 const inquirer = require('inquirer')
+const fs = require('fs')
 
-class Employee {
-  constructor(name, id, title){
-    this.name = name 
-    this.id = id 
-    this.title = title 
-  }
-  getName() { return this.name }
-  getId() { return this.id }
-  getTitle() { return this.title }
-  getRole() { return 'Employee' }
-}
+const Employee = require('./lib/Employee')
+const Manager = require('./lib/Manager')
+const Engineer = require('./lib/Engineer')
+const Intern = require('./lib/Intern')
 
-class Manager extends Employee {
-  constructor(name, id, title, officeNumber) {
-    super(name, id, title)
-    this.officeNumber = officeNumber
-  }
-
-  getRole() { return 'Manager'}
-}
-
-class Engineer extends Employee {
-  constructor(name, id, title, github) {
-    super(name, id, title)
-    this.github = github
-  }
-
-  getGithub() { return this.github }
-
-  getRole() { return 'Engineer' }
-}
-
-class Intern extends Employee {
-  constructor(name, id, title, school) {
-    super(name, id, title)
-    this.school = school
-  }
-  getSchool() { return this.school }
-
-  getRole() { return "Intern" }
-}
-
-///// End of Class Definition
-
-let email, id, role
+let name, email, id, role
 
 inquirer.prompt([
+  {
+    type: 'input',
+    name: 'name',
+    message: 'Enter employee name:'
+  },
   {
     type: 'input',
     name: 'email',
@@ -55,7 +22,7 @@ inquirer.prompt([
   {
     type: 'input',
     name: 'id',
-    message: 'Enter employee id'
+    message: 'Enter employee id:'
   },
   {
     type: 'input',
@@ -64,7 +31,32 @@ inquirer.prompt([
   }
 ])
   .then(res => {
+    name = res.name
     email = res.email
     id = res.id 
     role = res.role
+    console.log(name, email, id)
+
+    let html = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>title</title>
+    </head>
+    <body>
+      <h1>${name}</h1>
+      <ul>
+        <li>Email: ${email}</li>
+        <li>Id: ${id}</li>
+        <li>Role: ${role}</li>
+      </ul>
+    </body>
+  </html>
+`
+
+    fs.writeFile(`${name}-${id}.html`, html, (e) => {
+      if (e) console.error(e)
+    })
   })
+
